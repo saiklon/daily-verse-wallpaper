@@ -42,16 +42,24 @@ export default function App() {
   // Preload images for smooth transitions
   useEffect(() => {
     let loadedCount = 0;
+    const itemsToLoad = shuffledImages.length;
+    
+    if (itemsToLoad === 0) {
+      setImagesLoaded(true);
+      return;
+    }
+
     shuffledImages.forEach((src) => {
       const img = new Image();
       img.src = src;
-      img.onload = () => {
+      const handleLoad = () => {
         loadedCount++;
-        // Start showing once a few images are ready to ensure initial transition is smooth
         if (loadedCount >= 1) {
           setImagesLoaded(true);
         }
       };
+      img.onload = handleLoad;
+      img.onerror = handleLoad; // Evitar bloqueo si falla una imagen
     });
   }, [shuffledImages]);
 
